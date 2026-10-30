@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registros</title>
+</head>
+<body>
+
+<h1>Registros de Café</h1>
+
+<a href="/">Nuevo Registro</a>
+
+<br><br>
+
+<table border="1">
+
+<tr>
+    <th>ID</th>
+    <th>No.</th>
+    <th>Productor</th>
+    <th>No. Comercial</th>
+    <th>Finca</th>
+    <th>Tipo Café</th>
+    <th>Pesado Inicial</th>
+    <th>Pesado Final</th>
+    <th>Quintales</th>
+    <th>Imagen</th>
+    <th>Fecha</th>
+</tr>
+
+{% for registro in datos %}
+
+<tr>
+
+    <td>{{ registro[0] }}</td>
+    <td>{{ registro[1] }}</td>
+    <td>{{ registro[2] }}</td>
+    <td>{{ registro[3] }}</td>
+    <td>{{ registro[4] }}</td>
+    <td>{{ registro[5] }}</td>
+    <td>{{ registro[6] }}</td>
+    <td>{{ registro[7] }}</td>
+    <td>{{ registro[8] }}</td>
+
+    <td>
+
+    {% if registro[9] %}
+
+    <a href="/uploads/{{ registro[9] }}" target="_blank">
+
+        <img
+            src="/uploads/{{ registro[9] }}"
+            width="100"
+            height="100"
+        >
+
+    </a>
+
+    {% endif %}
+
+    </td>
+
+    <td>{{ registro[10] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>
