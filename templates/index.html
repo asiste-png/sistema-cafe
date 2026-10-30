@@ -23,6 +23,50 @@
 </nav>
 
 <div class="container mt-4">
+    <div class="row mb-4">
+
+    <div class="col-md-4">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body">
+                <h5>Total Registros</h5>
+                <h2>{{ total_registros }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body">
+                <h5>Total Quintales</h5>
+                <h2>{{ total_quintales }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark shadow">
+            <div class="card-body">
+                <h5>Productores</h5>
+                <h2>{{ total_productores }}</h2>
+            </div>
+        </div>
+    </div>
+
+<div class="card mb-4 shadow">
+
+    <div class="card-body text-center">
+
+        <a href="/registros" class="btn btn-primary btn-lg">
+            📋 Ver Registros
+        </a>
+
+        <a href="/exportar_excel" class="btn btn-success btn-lg">
+            📊 Exportar Excel
+        </a>
+
+    </div>
+
+</div>
 
     <div class="card shadow-lg border-0">
 

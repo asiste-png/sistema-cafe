@@ -91,6 +91,33 @@ def inicio():
 
         <a href="/registros">Ver Registros</a>
         """
+    conexion = sqlite3.connect("cafe.db")
+    cursor = conexion.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM registros")
+    total_registros = cursor.fetchone()[0]
+
+    cursor.execute("""
+        SELECT IFNULL(SUM(quintales_bascula),0)
+        FROM registros
+    """)
+    total_quintales = cursor.fetchone()[0]
+
+    cursor.execute("""
+        SELECT COUNT(DISTINCT productor)
+        FROM registros
+    """)
+    total_productores = cursor.fetchone()[0]
+
+    cursor.close()
+    conexion.close()
+
+    return render_template(
+        "index.html",
+        total_registros=total_registros,
+        total_quintales=total_quintales,
+        total_productores=total_productores
+    )
 
     return render_template("index.html")
 
