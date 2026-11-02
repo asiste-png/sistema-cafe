@@ -155,15 +155,7 @@ def inicio():
         conexion.commit()
         conexion.close()
 
-        return """
-        <h2>✅ Registro guardado correctamente</h2>
-
-        <a href="/">Nuevo Registro</a>
-
-        <br><br>
-
-        <a href="/registros">Ver Registros</a>
-        """
+        return redirect(url_for("inicio", guardado=1))
     conexion = sqlite3.connect("cafe.db")
     cursor = conexion.cursor()
 
@@ -240,7 +232,7 @@ def editar(id):
         conexion.commit()
         conexion.close()
 
-        return redirect("/registros")
+        return redirect(url_for("inicio", guardado=1))
 
     cursor.execute(
         "SELECT * FROM registros WHERE id=?",

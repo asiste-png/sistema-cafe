@@ -85,6 +85,18 @@
         </div>
 
         <div class="card-body">
+         
+        <div class="card-body">
+
+    {% if request.args.get('guardado') %}
+    <script>
+        alert("✅ Registro guardado correctamente");
+    </script>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <div class="row">    
 
             <form method="POST" enctype="multipart/form-data">
 
