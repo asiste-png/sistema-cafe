@@ -3,6 +3,33 @@ import sqlite3
 import pandas as pd
 import os
 from datetime import datetime
+import shutil
+from datetime import datetime
+
+def crear_respaldo():
+
+    carpeta_respaldo = r"C:\Users\samuel.alvarado\OneDrive - Tostaduria DelCafé S.A\RespaldoSistemaCafe"
+
+    if not os.path.exists(carpeta_respaldo):
+        os.makedirs(carpeta_respaldo)
+
+    fecha = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    origen = "cafe.db"
+
+    destino = os.path.join(
+        carpeta_respaldo,
+        f"cafe_{fecha}.db"
+    )
+
+    shutil.copy2(origen, destino)
+
+    print(f"✅ Respaldo creado: {destino}")
+
+    app = Flask(__name__)
+    app.secret_key = "SamuelCafe2026"
+crear_respaldo()
+
 
 
 app = Flask(__name__)
