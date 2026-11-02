@@ -1,3 +1,23 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <h2 class="mb-0">
+        📋 Listado de Registros
+    </h2>
+
+    <div>
+
+        /
+            ➕ Nuevo Registro
+        </a>
+
+        /exportar_excel
+            📊 Exportar Excel
+        </a>
+
+    </div>
+
+</div>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -73,62 +93,58 @@
 
     </div>
 
-    <div class="card shadow">
+    <div class="card shadow-sm mb-4">
 
-        <div class="card-body">
-
-            <form method="GET" class="row mb-3">
-
-    <div class="col-md-3">
-        <input
-            type="text"
-            name="productor"
-            class="form-control"
-            placeholder="Buscar Productor">
+    <div class="card-header bg-success text-white">
+        Filtros de Búsqueda
     </div>
 
-    <div class="col-md-3">
-        <input
-            type="text"
-            name="finca"
-            class="form-control"
+    <div class="card-body">
+
+        <form method="GET" class="row g-2">
+
+            <div class="col-md-3">
+                <input
+                    type="text"
+                    name="productor"
+                    class="form-control"
+                    placeholder="👨‍🌾 Productor">
+            </div>
+
+            <div class="col-md-3">
+                <input
+                    type="text"
+                    name="finca"
+                    class="form-control"
+                    placeholder="🌱 Finca">
+            </div>
+
+            <div class="col-md-2">
+                <input
+                    type="date"
+                    name="fecha"
+                    class="form-control">
+            </div>
+
+            <div class="col-md-2">
+                <button
+                    type="submit"
+                    class="btn btn-primary w-100">
+                    🔍 Buscar
+                </button>
+            </div>
+
+            <div class="col-md-2">
+                /registros
+                    ❌ Limpiar
+                </a>
+            </div>
+
+        </form>
+
     </div>
 
-    <div class="col-md-3">
-        <input
-            type="date"
-            name="fecha"
-            class="form-control">
-    </div>
-
-        </button>
-    </div>
-
-    <div class="col-md-3">
-        <input
-            type="text"
-            name="finca"
-            class="form-control"
-            placeholder="Buscar Finca">
-    </div>
-
-    </div>
-
-    <div class="col-md-2">
-        <button type="submit" class="btn btn-primary w-100">
-            🔍 Buscar
-        </button>
-    </div>
-
-</form>
-
-<div class="col-md-2">
-    <a href="/registros" class="btn btn-secondary w-100">
-        ❌ Limpiar
-    </a>
 </div>
-
-</form>
 
 <div class="table-responsive">
 
