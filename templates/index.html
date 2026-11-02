@@ -1,3 +1,56 @@
+<div class="bg-success text-white p-4 rounded shadow mb-4">
+    <h2 class="mb-1">☕ Sistema de Gestión de Café</h2>
+    <p class="mb-0">
+        Control de ingresos, productores, reportes y estadísticas
+    </p>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-5">
+
+                <form method="GET">
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="buscar"
+                        placeholder="🔍 Buscar productor, finca o café">
+                </form>
+
+            </div>
+
+            <div class="col-md-7 text-end">
+
+                <a href="/" class="btn btn-success">
+                    ➕ Nuevo Registro
+                </a>
+
+                <a href="/registros" class="btn btn-secondary">
+                    📋 Registros
+                </a>
+
+                <a href="/usuarios" class="btn btn-info text-white">
+                    👥 Usuarios
+                </a>
+
+                <a href="/exportar_excel" class="btn btn-primary">
+                    📊 Excel
+                </a>
+
+                <a href="/logout" class="btn btn-danger">
+                    🚪 Salir
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -30,11 +83,39 @@
 
 </nav>
 
-<div class="container mt-4">
-    <div class="row mb-4">
+<div class="row mb-4">
+
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body text-center">
+                <h1>📋</h1>
+                <h3>{{ total_registros }}</h3>
+                <p>Total Registros</p>
+            </div>
+        </div>
+    </div>
 
     <div class="col-md-4">
         <div class="card bg-primary text-white shadow">
+            <div class="card-body text-center">
+                <h1>☕</h1>
+                <h3>{{ total_quintales }}</h3>
+                <p>Total Quintales</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark shadow">
+            <div class="card-body text-center">
+                <h1>👨‍🌾</h1>
+                <h3>{{ total_productores }}</h3>
+                <p>Productores</p>
+            </div>
+        </div>
+    </div>
+
+</div>
             <div class="card-body">
                 <h5>Total Registros</h5>
                 <h2>{{ total_registros }}</h2>
