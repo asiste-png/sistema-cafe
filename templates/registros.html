@@ -35,7 +35,7 @@
 <body class="bg-light">
 
 <nav class="navbar navbar-dark bg-success shadow">
-    <div class="container-fluid">
+    <div class="container-fluid px-4">
         <span class="navbar-brand">
             ☕ Registros de Café
         </span>
@@ -56,7 +56,7 @@
                 placeholder="Buscar productor..."
                 value="{{ busqueda }}"
             >
-    <div class="card shadow-sm mb-4">
+    <div class="card-body p-4">
 
     <div class="card-header bg-success text-white">
         Filtros de Búsqueda
@@ -64,25 +64,31 @@
 
     <div class="card-body p-4">
 
-        <form method="GET" class="row g-3">
+     <form method="GET" class="row g-3 align-items-end">
 
     <div class="col-md-4">
+        <label class="form-label">👨‍🌾 Productor</label>
+
         <input
             type="text"
             name="productor"
             class="form-control form-control-lg"
-            placeholder="👨‍🌾 Productor">
+            placeholder="Buscar productor">
     </div>
 
     <div class="col-md-4">
+        <label class="form-label">🌱 Finca</label>
+
         <input
             type="text"
             name="finca"
             class="form-control form-control-lg"
-            placeholder="🌱 Finca">
+            placeholder="Buscar finca">
     </div>
 
     <div class="col-md-2">
+        <label class="form-label">📅 Fecha</label>
+
         <input
             type="date"
             name="fecha"
@@ -98,8 +104,9 @@
     </div>
 
     <div class="col-md-1">
-        <a href="/registros"
-           class="btn btn-secondary btn-lg w-100">
+        <a
+            href="/registros"
+            class="btn btn-secondary btn-lg w-100">
             ❌
         </a>
     </div>
