@@ -1,139 +1,203 @@
+<div class="card shadow mb-4">
+
+    <div class="card-body text-center">
+
+       <img
+    src="{{ url_for('static', filename='logo.jpg') }}"
+    alt="Logo Comercial El Mirador"
+    height="140"
+    class="mb-3">
+
+        <h2 class="text-success">
+            Sistema de Gestión de Café
+        </h
+
+        <p class="text-muted">
+            Comercial El Mirador, S.A.
+        </p>
+
+    </div>
+
+<div class="bg-success text-white p-4 rounded shadow mb-4">
+    <h2 class="mb-1">☕ Sistema de Gestión de Café</h2>
+    <p class="mb-0">
+        Control de ingresos, productores, reportes y estadísticas
+    </p>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-5">
+
+                <form method="GET">
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="buscar"
+                        placeholder="🔍 Buscar productor, finca o café">
+                </form>
+
+            </div>
+
+            <div class="col-md-7 text-end">
+
+                <a href="/" class="btn btn-success">
+                    ➕ Nuevo Registro
+                </a>
+
+                <a href="/registros" class="btn btn-secondary">
+                    📋 Registros
+                </a>
+
+                <a href="/usuarios" class="btn btn-info text-white">
+                    👥 Usuarios
+                </a>
+
+                <a href="/exportar_excel" class="btn btn-primary">
+                    📊 Excel
+                </a>
+
+                <a href="/logout" class="btn btn-danger">
+                    🚪 Salir
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Sistema de Café</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
 <body class="bg-light">
 
-<div class="container mt-4">
+<nav class="navbar navbar-dark bg-success shadow">
 
-    <!-- LOGO Y ENCABEZADO -->
-    <div class="card shadow mb-4">
+    <div class="container-fluid">
 
-        <div class="card-body text-center">
+        <span class="navbar-brand mb-0 h1">
+            ☕ Sistema de Control de Café
+        </span>
 
-            <img
-                src="{{ url_for('static', filename='logo.jpg') }}"
-                alt="Logo Comercial El Mirador"
-                class="img-fluid mb-3"
-                style="max-height:180px;">
-
-            <h2 class="text-success">
-                Sistema de Gestión de Café
-            </h2>
-
-            <p class="text-muted">
-                Comercial El Mirador, S.A.
-            </p>
-
-        </div>
+        <a href="/logout" class="btn btn-light">
+            🚪 Cerrar Sesión
+        </a>
 
     </div>
 
-    <!-- MENÚ -->
-    <div class="card shadow-sm mb-4">
+</nav>
+
+<div class="row mb-4">
+
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body text-center">
+                <h1>📋</h1>
+                <h3>{{ total_registros }}</h3>
+                <p>Total Registros</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body text-center">
+                <h1>☕</h1>
+                <h3>{{ total_quintales }}</h3>
+                <p>Total Quintales</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark shadow">
+            <div class="card-body text-center">
+                <h1>👨‍🌾</h1>
+                <h3>{{ total_productores }}</h3>
+                <p>Productores</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+            <div class="card-body">
+                <h5>Total Registros</h5>
+                <h2>{{ total_registros }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body">
+                <h5>Total Quintales</h5>
+                <h2>{{ total_quintales }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark shadow">
+            <div class="card-body">
+                <h5>Productores</h5>
+                <h2>{{ total_productores }}</h2>
+            </div>
+        </div>
+    </div>
+
+<div class="card mb-4 shadow">
+
+    <div class="card-body text-center">
+
+        <a href="/registros" class="btn btn-primary btn-lg">
+            📋 Ver Registros
+        </a>
+
+        <a href="/exportar_excel" class="btn btn-success btn-lg">
+            📊 Exportar Excel
+        </a>
+
+    </div>
+
+</div>
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-success text-white">
+            <h3 class="mb-0">
+                Nuevo Registro
+            </h3>
+        </div>
 
         <div class="card-body">
+         
+        <div class="card-body">
 
-            <div class="row align-items-center">
+    {% if request.args.get('guardado') %}
+    <script>
+        alert("✅ Registro guardado correctamente");
+    </script>
+    {% endif %}
 
-                <div class="col-md-5">
+    <form method="POST" enctype="multipart/form-data">
 
-                    <form method="GET">
-
-                        <input
-                            type="text"
-                            class="form-control"
-                            name="buscar"
-                            placeholder="🔍 Buscar productor, finca o café">
-
-                    </form>
-
-                </div>
-
-                <div class="col-md-7 text-end">
-
-                    <a href="/" class="btn btn-success">
-                        ➕ Nuevo Registro
-                    </a>
-
-                    <a href="/registros" class="btn btn-secondary">
-                        📋 Registros
-                    </a>
-
-                    <a href="/usuarios" class="btn btn-info text-white">
-                        👥 Usuarios
-                    </a>
-
-                    <a href="/exportar_excel" class="btn btn-primary">
-                        📊 Excel
-                    </a>
-
-                    <a href="/logout" class="btn btn-danger">
-                        🚪 Salir
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- TARJETAS -->
-    <div class="row mb-4">
-
-        <div class="col-md-4">
-
-            <div class="card bg-success text-white shadow">
-
-                <div class="card-body text-center">
-
-                    <h1>📋</h1>
-
-                    <h3>{{ total_registros }}</h3>
-
-                    <p>Total Registros</p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-4">
-
-            <div class="card bg-primary text-white shadow">
-
-                <div class="card-body text-center">
-
-                    <h1>☕</h1>
-
-                    <h3>{{ total_quintales }}</h3>
-
-                    <p>Total Quintales</p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-4">
-
-            <div class="card bg-warning text-dark shadow">
-
-                <div class="card-body text-center">
-
-                    <h1>👨‍🌾</h1>
-
-                    <h3>{{ total_productores }}</h3>
-
-                    <p>Productores</p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
+        <div class="row">    
 
             <form method="POST" enctype="multipart/form-data">
 
