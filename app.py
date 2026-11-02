@@ -268,27 +268,36 @@ def eliminar(id):
 @app.route("/registros")
 def registros():
 
-    busqueda = request.args.get("buscar", "")
+    productor = request.args.get("productor", "")
+    finca = request.args.get("finca", "")
+    fecha = request.args.get("fecha", "")
 
     conexion = sqlite3.connect("cafe.db")
     cursor = conexion.cursor()
 
-    if busqueda:
+    consulta = """
+        SELECT *
+        FROM registros
+        WHERE 1=1
+    """
 
-        cursor.execute("""
-            SELECT *
-            FROM registros
-            WHERE productor LIKE ?
-            ORDER BY id DESC
-        """, ('%' + busqueda + '%',))
+    parametros = []
 
-    else:
+    if productor:
+        consulta += " AND productor LIKE ?"
+        parametros.append(f"%{productor}%")
 
-        cursor.execute("""
-            SELECT *
-            FROM registros
-            ORDER BY id DESC
-        """)
+    if finca:
+        consulta += " AND finca LIKE ?"
+        parametros.append(f"%{finca}%")
+
+    if fecha:
+        consulta += " AND fecha LIKE ?"
+        parametros.append(f"%{fecha}%")
+
+    consulta += " ORDER BY id DESC"
+
+    cursor.execute(consulta, parametros)
 
     datos = cursor.fetchall()
 
@@ -296,8 +305,7 @@ def registros():
 
     return render_template(
         "registros.html",
-        datos=datos,
-        busqueda=busqueda
+        datos=datos
     )
 
 @app.route("/exportar_excel")
