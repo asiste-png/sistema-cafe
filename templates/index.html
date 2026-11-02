@@ -2,7 +2,11 @@
 
     <div class="card-body text-center">
 
-        {{ url_for('static', filename='logo.jpg') }}
+       <img
+    src="{{ url_for('static', filename='logo.jpg') }}"
+    alt="Logo Comercial El Mirador"
+    height="140"
+    class="mb-3">
 
         <h2 class="text-success">
             Sistema de Gestión de Café
