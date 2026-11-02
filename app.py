@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory, redirect, send_file
+from flask import Flask, render_template, request, redirect, session, url_for, send_file, send_from_directory
 import sqlite3
 import pandas as pd
 import os
@@ -6,6 +6,7 @@ from datetime import datetime
 
 
 app = Flask(__name__)
+app.secret_key = "SamuelCafe2026"
 
 # Carpeta de imágenes
 UPLOAD_FOLDER = "uploads"
@@ -15,10 +16,55 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        usuario = request.form.get("usuario")
+        password = request.form.get("password")
+
+        print("Usuario:", usuario)
+        print("Password:", password)
+
+        conn = sqlite3.connect("cafe.db")
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT *
+            FROM usuarios
+            WHERE usuario = ?
+            AND password = ?
+            AND estado = 'Activo'
+        """, (usuario, password))
+
+        usuario_encontrado = cursor.fetchone()
+
+        conn.close()
+
+        if usuario_encontrado:
+            session["usuario"] = usuario
+            return redirect(url_for("inicio"))
+
+        return render_template(
+            "login.html",
+            error="Usuario o contraseña incorrectos"
+        )
+
+    return render_template("login.html")
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect("/login")
 
 # FORMULARIO PRINCIPAL
 @app.route("/", methods=["GET", "POST"])
 def inicio():
+
+    if "usuario" not in session:
+        return redirect("/login")
 
     if request.method == "POST":
 
