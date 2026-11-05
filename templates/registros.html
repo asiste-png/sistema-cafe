@@ -36,9 +36,21 @@
 
 <nav class="navbar navbar-dark bg-success shadow">
     <div class="container-fluid px-4">
-        <span class="navbar-brand">
-            ☕ Registros de Café
-        </span>
+<div class="d-flex align-items-center">
+
+    <img
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="Logo"
+        width="50"
+        height="50"
+        class="me-2"
+    >
+
+    <span class="navbar-brand">
+        Registros de Café
+    </span>
+
+</div>
     </div>
 </nav>
 
