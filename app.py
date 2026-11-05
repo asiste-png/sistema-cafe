@@ -350,6 +350,91 @@ def exportar_excel():
 def uploaded_file(filename):
     return send_from_directory('uploads', filename)
 
+@app.route("/usuarios")
+def usuarios():
+
+    conexion = sqlite3.connect("cafe.db")
+    cursor = conexion.cursor()
+
+    cursor.execute("""
+        SELECT id, usuario, rol, estado
+        FROM usuarios
+        ORDER BY usuario
+    """)
+
+    datos = cursor.fetchall()
+
+    conexion.close()
+
+    return render_template(
+        "usuarios.html",
+        datos=datos
+    )
+
+
+
+@app.route("/editar_usuario/<int:id>", methods=["GET", "POST"])
+def editar_usuario(id):
+
+    conexion = sqlite3.connect("cafe.db")
+    cursor = conexion.cursor()
+
+    if request.method == "POST":
+
+        cursor.execute("""
+        UPDATE usuarios
+        SET
+            usuario=?,
+            password=?,
+            rol=?,
+            estado=?
+        WHERE id=?
+        """, (
+            request.form["usuario"],
+            request.form["password"],
+            request.form["rol"],
+            request.form["estado"],
+            id
+        ))
+
+        conexion.commit()
+        conexion.close()
+
+        return redirect("/usuarios")
+
+    cursor.execute(
+        "SELECT * FROM usuarios WHERE id=?",
+        (id,)
+    )
+
+    usuario = cursor.fetchone()
+
+    conexion.close()
+
+    return render_template(
+        "editar_usuario.html",
+        usuario=usuario
+    )
+
+
+@app.route("/eliminar_usuario/<int:id>")
+def eliminar_usuario(id):
+
+    conexion = sqlite3.connect("cafe.db")
+    cursor = conexion.cursor()
+
+    cursor.execute(
+        "DELETE FROM usuarios WHERE id=?",
+        (id,)
+    )
+
+    conexion.commit()
+    conexion.close()
+
+    return redirect("/usuarios")
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 if __name__ == "__main__":
     app.run(debug=True)
