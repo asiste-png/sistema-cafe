@@ -101,20 +101,25 @@
                         <input type="text" class="form-control" name="numero_comercial">
                     </div>
 
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Productor *</label>
-                        <input type="text" class="form-control" name="productor" required>
-                    </div>
+                    <<div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Productor *</label>
+                    <input type="text" class="form-control" name="productor" required>
+                </div>
 
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Finca del Ticket *</label>
-                        <input type="text" class="form-control" name="finca" list="lista_fincas" placeholder="Selecciona o escribe la finca" required>
-                        <datalist id="lista_fincas">
-                            {% for f in fincas_existentes %}
-                            <option value="{{ f }}">
-                            {% endfor %}
-                        </datalist>
-                    </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Finca *</label>
+                    <input type="text" class="form-control" name="finca" list="lista_fincas" placeholder="Nombre de la finca" required>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Finca del Ticket *</label>
+                    <input type="text" class="form-control" name="finca_ticket" list="lista_fincas" placeholder="Finca del ticket" required>
+                    <datalist id="lista_fincas">
+                        {% for f in fincas_existentes %}
+                        <option value="{{ f }}">
+                        {% endfor %}
+                    </datalist>
+                </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Tipo de Café</label>

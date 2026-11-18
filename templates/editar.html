@@ -49,15 +49,20 @@
                         <input type="text" class="form-control" name="productor" value="{{ registro[2] }}" required>
                     </div>
 
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Finca del Ticket</label>
-                        <input type="text" class="form-control" name="finca" list="lista_fincas" value="{{ registro[4] or '' }}" required>
-                        <datalist id="lista_fincas">
-                            {% for f in fincas_existentes %}
-                            <option value="{{ f }}">
-                            {% endfor %}
-                        </datalist>
-                    </div>
+                    <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Finca *</label>
+                    <input type="text" class="form-control" name="finca" list="lista_fincas" value="{{ registro['finca'] or '' }}" required>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Finca del Ticket *</label>
+                    <input type="text" class="form-control" name="finca_ticket" list="lista_fincas" value="{{ registro['finca_ticket'] or '' }}" required>
+                    <datalist id="lista_fincas">
+                        {% for f in fincas_existentes %}
+                        <option value="{{ f }}">
+                        {% endfor %}
+                    </datalist>
+                </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Tipo Café</label>

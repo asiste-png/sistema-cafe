@@ -80,7 +80,7 @@ def inicio():
         pesado_final = request.form["pesado_final"]
         quintales_bascula = request.form["quintales_bascula"]
         fecha_ticket = request.form.get("fecha_ticket", "")
-
+        finca_ticket = request.form.get("finca_ticket", "")
         fecha_registro = datetime.now().strftime("%d/%m/%Y %H:%M")
         usuario_actual = session.get("usuario", "Desconocido")
 
@@ -101,6 +101,7 @@ def inicio():
             productor,
             numero_comercial,
             finca,
+            finca_ticket,
             tipo_cafe,
             pesado_inicial,
             pesado_final,
@@ -110,12 +111,13 @@ def inicio():
             fecha_ticket,
             creado_por
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             numero,
             productor,
             numero_comercial,
             finca,
+            finca_ticket,
             tipo_cafe,
             pesado_inicial,
             pesado_final,
@@ -174,6 +176,7 @@ def editar(id):
     if request.method == "POST":
         usuario_actual = session.get("usuario", "Desconocido")
         fecha_mod = datetime.now().strftime("%d/%m/%Y %H:%M")
+        finca_ticket = request.form.get("finca_ticket", "")
 
         cursor.execute("""
         UPDATE registros
@@ -182,6 +185,7 @@ def editar(id):
             productor=?,
             numero_comercial=?,
             finca=?,
+            finca_ticket=?,
             tipo_cafe=?,
             pesado_inicial=?,
             pesado_final=?,
@@ -196,6 +200,7 @@ def editar(id):
             request.form["productor"],
             request.form["numero_comercial"],
             request.form["finca"],
+            finca_ticket,
             request.form["tipo_cafe"],
             request.form["pesado_inicial"],
             request.form["pesado_final"],
