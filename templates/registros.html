@@ -79,7 +79,7 @@
                 <tbody>
                     {% for registro in datos %}
                     <tr>
-                        <td>{{ registro[0] }}</td>
+                        <td>{{ loop.index }}</td>
                         <td class="fw-bold">{{ registro[1] }}</td>
                         <td>
                             {% if registro[11] %}
