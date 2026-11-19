@@ -418,8 +418,6 @@ def exportar_excel():
         download_name="registros_cafe.xlsx",
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
-
 @app.route("/usuarios")
 def usuarios():
     if "usuario" not in session:
@@ -434,6 +432,31 @@ def usuarios():
     conexion.close()
 
     return render_template("usuarios.html", datos=datos)
+
+
+@app.route("/nuevo_usuario", methods=["GET", "POST"])
+def nuevo_usuario():
+    if "usuario" not in session:
+        return redirect("/login")
+
+    if request.method == "POST":
+        conexion = get_db_connection()
+        cursor = conexion.cursor()
+        cursor.execute("""
+        INSERT INTO usuarios (usuario, password, rol, estado)
+        VALUES (%s, %s, %s, %s)
+        """, (
+            request.form["usuario"],
+            request.form["password"],
+            request.form["rol"],
+            request.form.get("estado", "Activo")
+        ))
+        conexion.commit()
+        cursor.close()
+        conexion.close()
+        return redirect("/usuarios")
+
+    return render_template("nuevo_usuario.html")
 
 
 @app.route("/editar_usuario/<int:id>", methods=["GET", "POST"])
