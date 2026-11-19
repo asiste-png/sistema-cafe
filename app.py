@@ -97,7 +97,7 @@ def login():
         cursor = conn.cursor()
 
         cursor.execute("""
-            SELECT *
+            SELECT id, usuario, rol
             FROM usuarios
             WHERE usuario = %s
             AND password = %s
@@ -109,7 +109,8 @@ def login():
         conn.close()
 
         if usuario_encontrado:
-            session["usuario"] = usuario
+            session["usuario"] = usuario_encontrado[1]
+            session["rol"] = usuario_encontrado[2].strip().lower()
             return redirect(url_for("inicio"))
 
         return render_template("login.html", error="Usuario o contraseña incorrectos")
@@ -311,8 +312,8 @@ def editar(id):
 
 @app.route("/eliminar/<int:id>")
 def eliminar(id):
-    if "usuario" not in session:
-        return redirect("/login")
+    if "usuario" not in session or session.get("rol") != "admin":
+        return redirect("/registros")
 
     conexion = get_db_connection()
     cursor = conexion.cursor()
@@ -420,8 +421,8 @@ def exportar_excel():
     )
 @app.route("/usuarios")
 def usuarios():
-    if "usuario" not in session:
-        return redirect("/login")
+    if "usuario" not in session or session.get("rol") != "admin":
+        return redirect("/")
 
     conexion = get_db_connection()
     cursor = conexion.cursor()
@@ -436,8 +437,8 @@ def usuarios():
 
 @app.route("/nuevo_usuario", methods=["GET", "POST"])
 def nuevo_usuario():
-    if "usuario" not in session:
-        return redirect("/login")
+    if "usuario" not in session or session.get("rol") != "admin":
+        return redirect("/")
 
     if request.method == "POST":
         conexion = get_db_connection()
@@ -461,8 +462,8 @@ def nuevo_usuario():
 
 @app.route("/editar_usuario/<int:id>", methods=["GET", "POST"])
 def editar_usuario(id):
-    if "usuario" not in session:
-        return redirect("/login")
+    if "usuario" not in session or session.get("rol") != "admin":
+        return redirect("/")
 
     conexion = get_db_connection()
     cursor = conexion.cursor()
@@ -494,8 +495,8 @@ def editar_usuario(id):
 
 @app.route("/eliminar_usuario/<int:id>")
 def eliminar_usuario(id):
-    if "usuario" not in session:
-        return redirect("/login")
+    if "usuario" not in session or session.get("rol") != "admin":
+        return redirect("/")
 
     conexion = get_db_connection()
     cursor = conexion.cursor()
@@ -505,7 +506,6 @@ def eliminar_usuario(id):
     conexion.close()
 
     return redirect("/usuarios")
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
