@@ -420,8 +420,8 @@ def exportar_excel():
     )
 @app.route("/usuarios")
 def usuarios():
-    if "usuario" not in session or session.get("rol") not in ("admin", "admi"):
-        return redirect("/")
+    if "usuario" not in session or session.get("rol") not in ("admin", "admi", "administrador"):
+     return redirect("/")
 
 @app.route("/ver_sesion")
 def ver_sesion():
@@ -440,8 +440,8 @@ def ver_sesion():
 
 @app.route("/nuevo_usuario", methods=["GET", "POST"])
 def nuevo_usuario():
-    if "usuario" not in session or session.get("rol") not in ("admin", "admi"):
-        return redirect("/")
+    if "usuario" not in session or session.get("rol") not in ("admin", "admi", "administrador"):
+     return redirect("/")
 
     if request.method == "POST":
         conexion = get_db_connection()
@@ -465,8 +465,8 @@ def nuevo_usuario():
 
 @app.route("/editar_usuario/<int:id>", methods=["GET", "POST"])
 def editar_usuario(id):
-    if "usuario" not in session or session.get("rol") not in ("admin", "admi"):
-        return redirect("/")
+    if "usuario" not in session or session.get("rol") not in ("admin", "admi", "administrador"):
+     return redirect("/")
 
     conexion = get_db_connection()
     cursor = conexion.cursor()
