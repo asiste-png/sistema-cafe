@@ -13,8 +13,8 @@ app.secret_key = os.environ.get("SECRET_KEY", "SamuelCafe2026")
 
 # Credenciales de Supabase (se configuran en Render -> Environment Variables)
 DATABASE_URL = os.environ.get("DATABASE_URL")
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+SUPABASE_URL = (os.environ.get("SUPABASE_URL") or "").strip().rstrip("/")
+SUPABASE_KEY = (os.environ.get("SUPABASE_KEY") or "").strip()
 BUCKET_NAME = "tickets"
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY) if (SUPABASE_URL and SUPABASE_KEY) else None
@@ -97,7 +97,7 @@ def login():
         cursor = conn.cursor()
 
         cursor.execute("""
-            SELECT id, usuario  , rol
+            SELECT id, usuario, rol
             FROM usuarios
             WHERE usuario = %s
             AND password = %s
@@ -203,7 +203,7 @@ def inicio():
             return redirect(url_for("inicio", guardado=1))
 
         except Exception as e:
-            return f"<h3>Error exacto al guardar:</h3><pre>{e}</pre>"
+            return f"<h3>Error exacto al guardar:</h3><pre>{e}</pre><p><b>SUPABASE_URL actual:</b> '{SUPABASE_URL}'</p>"
 
     conexion = get_db_connection()
     cursor = conexion.cursor()
@@ -230,6 +230,7 @@ def inicio():
         total_productores=total_productores,
         fincas_existentes=fincas_existentes
     )
+
 
 # MOSTRAR IMÁGENES DESDE SUPABASE STORAGE
 @app.route("/uploads/<path:filename>")
@@ -315,7 +316,7 @@ def editar(id):
 
 @app.route("/eliminar/<int:id>")
 def eliminar(id):
-    if "usuario" not in session or session.get("rol") not in ("admin", "admi"):
+    if "usuario" not in session or session.get("rol") not in ("admin", "admi", "administrador"):
         return redirect("/registros")
 
     conexion = get_db_connection()
@@ -336,6 +337,7 @@ def eliminar(id):
     conexion.close()
 
     return redirect("/registros")
+
 
 @app.route("/registros")
 def registros():
@@ -421,10 +423,12 @@ def exportar_excel():
         download_name="registros_cafe.xlsx",
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
+
 @app.route("/usuarios")
 def usuarios():
     if "usuario" not in session or session.get("rol") not in ("admin", "admi", "administrador"):
-     return redirect("/")
+        return redirect("/")
 
     conexion = get_db_connection()
     cursor = conexion.cursor()
@@ -440,7 +444,7 @@ def usuarios():
 @app.route("/nuevo_usuario", methods=["GET", "POST"])
 def nuevo_usuario():
     if "usuario" not in session or session.get("rol") not in ("admin", "admi", "administrador"):
-     return redirect("/")
+        return redirect("/")
 
     if request.method == "POST":
         conexion = get_db_connection()
@@ -465,7 +469,7 @@ def nuevo_usuario():
 @app.route("/editar_usuario/<int:id>", methods=["GET", "POST"])
 def editar_usuario(id):
     if "usuario" not in session or session.get("rol") not in ("admin", "admi", "administrador"):
-     return redirect("/")
+        return redirect("/")
 
     conexion = get_db_connection()
     cursor = conexion.cursor()
@@ -497,7 +501,7 @@ def editar_usuario(id):
 
 @app.route("/eliminar_usuario/<int:id>")
 def eliminar_usuario(id):
-    if "usuario" not in session or session.get("rol") not in ("admin", "admi"):
+    if "usuario" not in session or session.get("rol") not in ("admin", "admi", "administrador"):
         return redirect("/")
 
     conexion = get_db_connection()
