@@ -423,10 +423,6 @@ def usuarios():
     if "usuario" not in session or session.get("rol") not in ("admin", "admi", "administrador"):
      return redirect("/")
 
-@app.route("/ver_sesion")
-def ver_sesion():
-    return f"Usuario: {session.get('usuario')} | Rol exacto: '{session.get('rol')}'"
-
     conexion = get_db_connection()
     cursor = conexion.cursor()
 
