@@ -97,7 +97,7 @@ def login():
         cursor = conn.cursor()
 
         cursor.execute("""
-            SELECT id, usuario, rol
+            SELECT id, usuario  , rol
             FROM usuarios
             WHERE usuario = %s
             AND password = %s
@@ -436,7 +436,7 @@ def usuarios():
 
 @app.route("/nuevo_usuario", methods=["GET", "POST"])
 def nuevo_usuario():
-    if "usuario" not in session or session.get("rol") != "admin":
+    if "usuario" not in session or session.get("rol") not in ("admin", "admi"):
         return redirect("/")
 
     if request.method == "POST":
@@ -461,7 +461,7 @@ def nuevo_usuario():
 
 @app.route("/editar_usuario/<int:id>", methods=["GET", "POST"])
 def editar_usuario(id):
-    if "usuario" not in session or session.get("rol") != "admin":
+    if "usuario" not in session or session.get("rol") not in ("admin", "admi"):
         return redirect("/")
 
     conexion = get_db_connection()
@@ -494,7 +494,7 @@ def editar_usuario(id):
 
 @app.route("/eliminar_usuario/<int:id>")
 def eliminar_usuario(id):
-    if "usuario" not in session or session.get("rol") != "admin":
+    if "usuario" not in session or session.get("rol") not in ("admin", "admi"):
         return redirect("/")
 
     conexion = get_db_connection()
@@ -505,6 +505,7 @@ def eliminar_usuario(id):
     conexion.close()
 
     return redirect("/usuarios")
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
