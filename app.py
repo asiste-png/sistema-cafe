@@ -131,75 +131,79 @@ def inicio():
         return redirect("/login")
 
     if request.method == "POST":
-        numero = request.form["numero"]
-        productor = request.form["productor"]
-        numero_comercial = request.form["numero_comercial"]
-        finca = request.form["finca"]
-        tipo_cafe = request.form["tipo_cafe"]
-        pesado_inicial = a_float(request.form["pesado_inicial"])
-        pesado_final = a_float(request.form["pesado_final"])
-        quintales_bascula = a_float(request.form["quintales_bascula"])
-        fecha_ticket = request.form.get("fecha_ticket", "")
-        finca_ticket = request.form.get("finca_ticket", "")
-        fecha_registro = datetime.now().strftime("%d/%m/%Y %H:%M")
-        usuario_actual = session.get("usuario", "Desconocido")
+        try:
+            numero = request.form.get("numero", "")
+            productor = request.form.get("productor", "")
+            numero_comercial = request.form.get("numero_comercial", "")
+            finca = request.form.get("finca", "")
+            tipo_cafe = request.form.get("tipo_cafe", "")
+            pesado_inicial = a_float(request.form.get("pesado_inicial"))
+            pesado_final = a_float(request.form.get("pesado_final"))
+            quintales_bascula = a_float(request.form.get("quintales_bascula"))
+            fecha_ticket = request.form.get("fecha_ticket", "")
+            finca_ticket = request.form.get("finca_ticket", "")
+            fecha_registro = datetime.now().strftime("%d/%m/%Y %H:%M")
+            usuario_actual = session.get("usuario", "Desconocido")
 
-        nombre_imagen = ""
-        if "imagen" in request.files:
-            archivo = request.files["imagen"]
-            if archivo and archivo.filename != "" and supabase:
-                nombre_limpio = secure_filename(archivo.filename)
-                nombre_imagen = f"{uuid.uuid4().hex[:8]}_{nombre_limpio}"
-                contenido = archivo.read()
-                content_type = archivo.content_type or "image/jpeg"
+            nombre_imagen = ""
+            if "imagen" in request.files:
+                archivo = request.files["imagen"]
+                if archivo and archivo.filename != "" and supabase:
+                    nombre_limpio = secure_filename(archivo.filename)
+                    nombre_imagen = f"{uuid.uuid4().hex[:8]}_{nombre_limpio}"
+                    contenido = archivo.read()
+                    content_type = archivo.content_type or "image/jpeg"
 
-                supabase.storage.from_(BUCKET_NAME).upload(
-                    path=nombre_imagen,
-                    file=contenido,
-                    file_options={"content-type": content_type}
-                )
+                    supabase.storage.from_(BUCKET_NAME).upload(
+                        path=nombre_imagen,
+                        file=contenido,
+                        file_options={"content-type": content_type}
+                    )
 
-        conexion = get_db_connection()
-        cursor = conexion.cursor()
+            conexion = get_db_connection()
+            cursor = conexion.cursor()
 
-        cursor.execute("""
-        INSERT INTO registros (
-            numero,
-            productor,
-            numero_comercial,
-            finca,
-            finca_ticket,
-            tipo_cafe,
-            pesado_inicial,
-            pesado_final,
-            quintales_bascula,
-            imagen,
-            fecha_registro,
-            fecha_ticket,
-            creado_por
-        )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, (
-            numero,
-            productor,
-            numero_comercial,
-            finca,
-            finca_ticket,
-            tipo_cafe,
-            pesado_inicial,
-            pesado_final,
-            quintales_bascula,
-            nombre_imagen,
-            fecha_registro,
-            fecha_ticket,
-            usuario_actual
-        ))
+            cursor.execute("""
+            INSERT INTO registros (
+                numero,
+                productor,
+                numero_comercial,
+                finca,
+                finca_ticket,
+                tipo_cafe,
+                pesado_inicial,
+                pesado_final,
+                quintales_bascula,
+                imagen,
+                fecha_registro,
+                fecha_ticket,
+                creado_por
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                numero,
+                productor,
+                numero_comercial,
+                finca,
+                finca_ticket,
+                tipo_cafe,
+                pesado_inicial,
+                pesado_final,
+                quintales_bascula,
+                nombre_imagen,
+                fecha_registro,
+                fecha_ticket,
+                usuario_actual
+            ))
 
-        conexion.commit()
-        cursor.close()
-        conexion.close()
+            conexion.commit()
+            cursor.close()
+            conexion.close()
 
-        return redirect(url_for("inicio", guardado=1))
+            return redirect(url_for("inicio", guardado=1))
+
+        except Exception as e:
+            return f"<h3>Error exacto al guardar:</h3><pre>{e}</pre>"
 
     conexion = get_db_connection()
     cursor = conexion.cursor()
@@ -226,7 +230,6 @@ def inicio():
         total_productores=total_productores,
         fincas_existentes=fincas_existentes
     )
-
 
 # MOSTRAR IMÁGENES DESDE SUPABASE STORAGE
 @app.route("/uploads/<path:filename>")
