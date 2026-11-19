@@ -312,7 +312,7 @@ def editar(id):
 
 @app.route("/eliminar/<int:id>")
 def eliminar(id):
-    if "usuario" not in session or session.get("rol") != "admin":
+    if "usuario" not in session or session.get("rol") not in ("admin", "admi"):
         return redirect("/registros")
 
     conexion = get_db_connection()
@@ -333,7 +333,6 @@ def eliminar(id):
     conexion.close()
 
     return redirect("/registros")
-
 
 @app.route("/registros")
 def registros():
@@ -421,7 +420,7 @@ def exportar_excel():
     )
 @app.route("/usuarios")
 def usuarios():
-    if "usuario" not in session or session.get("rol") != "admin":
+    if "usuario" not in session or session.get("rol") not in ("admin", "admi"):
         return redirect("/")
 
     conexion = get_db_connection()
