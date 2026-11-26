@@ -88,6 +88,7 @@
                         <th>Fecha Ingreso</th>
                         <th>Ingresado por</th>
                         <th>Última Modificación</th>
+                        <th>Estado Pago</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -147,6 +148,15 @@
                                 <a href="/eliminar/{{ registro[0] }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar este registro?')">🗑️</a>
                             {% endif %}
                         </td>
+
+                        <td>
+    {% set pago = registro[17] if registro|length > 17 else 'No pagado' %}
+    {% if pago == 'Pagado' %}
+        <span class="badge bg-success">Pagado</span>
+    {% else %}
+        <span class="badge bg-danger">No pagado</span>
+    {% endif %}
+</td>
                     </tr>
                     {% endfor %}
                 </tbody>

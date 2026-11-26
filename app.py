@@ -369,7 +369,7 @@ def registros():
         SELECT id, numero, productor, numero_comercial, finca, tipo_cafe,
                pesado_inicial, pesado_final, quintales_bascula, imagen,
                fecha_registro, fecha_ticket, creado_por, modificado_por,
-               fecha_modificacion, finca_ticket, tipo_movimiento
+               fecha_modificacion, finca_ticket, tipo_movimiento, estado_pago
         FROM registros WHERE 1=1
     """
     parametros = []
