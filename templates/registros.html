@@ -16,7 +16,7 @@
         </div>
         <div class="d-flex align-items-center gap-2">
                 <span class="text-white me-2">👤 {{ session.get('usuario') }}</span>
-                {% if session.get('rol') == 'admin' %}
+                {% if session.get('rol') in ['admin', 'admi', 'administrador'] %}
                     <a href="/usuarios" class="btn btn-warning btn-sm fw-bold">👥 Usuarios</a>
                 {% endif %}
                 <a href="/" class="btn btn-light btn-sm fw-bold text-success">➕ Nuevo Registro</a>
@@ -152,9 +152,9 @@
                         </td>
                         <td>
                             <a href="/editar/{{ registro[0] }}" class="btn btn-warning btn-sm">✏️</a>
-                            {% if session.get('rol') == 'admin' %}
-                                <a href="/eliminar/{{ registro[0] }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar este registro?')">🗑️</a>
                             {% if session.get('rol') in ['admin', 'admi', 'administrador'] %}
+                                <a href="/eliminar/{{ registro[0] }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar este registro?')">🗑️</a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
