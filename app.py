@@ -60,7 +60,9 @@ def init_db():
             creado_por TEXT,
             modificado_por TEXT,
             fecha_modificacion TEXT,
-            finca_ticket TEXT
+            finca_ticket TEXT,
+            tipo_movimiento TEXT,
+            estado_pago TEXT DEFAULT 'No pagado'
         )
     """)
 
@@ -433,6 +435,8 @@ def exportar_excel():
         finca AS "Finca",
         finca_ticket AS "Finca Ticket",
         tipo_cafe AS "Tipo Café",
+        tipo_movimiento AS "Movimiento",
+        estado_pago AS "Estado Pago",
         pesado_inicial AS "Pesado Inicial",
         pesado_final AS "Pesado Final",
         quintales_bascula AS "Quintales Báscula",
