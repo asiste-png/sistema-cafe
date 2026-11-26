@@ -154,7 +154,7 @@
                             <a href="/editar/{{ registro[0] }}" class="btn btn-warning btn-sm">✏️</a>
                             {% if session.get('rol') == 'admin' %}
                                 <a href="/eliminar/{{ registro[0] }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar este registro?')">🗑️</a>
-                            {% endif %}
+                            {% if session.get('rol') in ['admin', 'admi', 'administrador'] %}
                         </td>
                     </tr>
                     {% endfor %}
