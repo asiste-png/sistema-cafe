@@ -35,12 +35,17 @@
         </div>
         <div class="card-body">
             <form method="GET" class="row g-3 align-items-end">
-                <div class="col-md-4">
+                <div class="col-md-2">
+                    <label class="form-label">🎫 No. Ticket</label>
+                    <input type="text" name="ticket" class="form-control" placeholder="Buscar ticket" value="{{ request.args.get('ticket', '') }}">
+                </div>
+
+                <div class="col-md-3">
                     <label class="form-label">👨‍🌾 Productor</label>
                     <input type="text" name="productor" class="form-control" placeholder="Buscar productor" value="{{ request.args.get('productor', '') }}">
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">🌱 Finca</label>
                     <input type="text" name="finca" class="form-control" placeholder="Buscar finca" value="{{ request.args.get('finca', '') }}">
                 </div>
@@ -58,6 +63,12 @@
         </div>
     </div>
 
+    <!-- Resumen de Suma de Quintales -->
+    <div class="alert alert-success d-flex justify-content-between align-items-center shadow-sm mb-3">
+        <span class="fw-bold">📋 Registros mostrados: {{ datos|length }}</span>
+        <span class="fs-5 fw-bold">⚖️ Total Quintales: {{ "%.2f"|format(total_quintales or 0) }} qq</span>
+    </div>
+
     <!-- Tabla de Registros -->
     <div class="card shadow-sm mb-5">
         <div class="table-responsive">
@@ -71,6 +82,7 @@
                         <th>Finca</th>
                         <th>Finca del Ticket</th>
                         <th>Tipo Café</th>
+                        <th>Movimiento</th>
                         <th>Quintales</th>
                         <th>Imagen</th>
                         <th>Fecha Ingreso</th>
@@ -93,8 +105,20 @@
                         </td>
                         <td>{{ registro[2] }}</td>
                         <td>{{ registro[4] }}</td>
-                        <td>{{ registro[-1] or '' }}</td>
+                        <td>{{ registro[6] or '' }}</td>
                         <td>{{ registro[5] }}</td>
+                        <td>
+                            {% set mov = registro[-1] %}
+                            {% if mov == 'Compra' %}
+                                <span class="badge bg-success">{{ mov }}</span>
+                            {% elif mov == 'Cosecha' %}
+                                <span class="badge bg-warning text-dark">{{ mov }}</span>
+                            {% elif mov == 'Traslado' %}
+                                <span class="badge bg-primary">{{ mov }}</span>
+                            {% else %}
+                                <span class="text-muted small">{{ mov or '-' }}</span>
+                            {% endif %}
+                        </td>
                         <td class="fw-bold text-success">{{ registro[8] }}</td>
                         <td class="text-center">
                             {% if registro[9] %}
@@ -117,12 +141,12 @@
                                 <span class="text-muted small">Sin cambios</span>
                             {% endif %}
                         </td>
-                       <td>
-    <a href="/editar/{{ registro[0] }}" class="btn btn-warning btn-sm">✏️</a>
-    {% if session.get('rol') == 'admin' %}
-        <a href="/eliminar/{{ registro[0] }}" class="btn btn-danger btn-sm" ...>🗑️</a>
-    {% endif %}
-</td>
+                        <td>
+                            <a href="/editar/{{ registro[0] }}" class="btn btn-warning btn-sm">✏️</a>
+                            {% if session.get('rol') == 'admin' %}
+                                <a href="/eliminar/{{ registro[0] }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar este registro?')">🗑️</a>
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

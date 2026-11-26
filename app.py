@@ -351,9 +351,10 @@ def registros():
     if "usuario" not in session:
         return redirect("/login")
 
-    productor = request.args.get("productor", "")
-    finca = request.args.get("finca", "")
-    fecha = request.args.get("fecha", "")
+    ticket = request.args.get("ticket", "").strip()
+    productor = request.args.get("productor", "").strip()
+    finca = request.args.get("finca", "").strip()
+    fecha = request.args.get("fecha", "").strip()
 
     conexion = get_db_connection()
     cursor = conexion.cursor()
@@ -362,18 +363,22 @@ def registros():
         SELECT id, numero, productor, numero_comercial, finca, tipo_cafe,
                pesado_inicial, pesado_final, quintales_bascula, imagen,
                fecha_registro, fecha_ticket, creado_por, modificado_por,
-               fecha_modificacion, finca_ticket
+               fecha_modificacion, finca_ticket, tipo_movimiento
         FROM registros WHERE 1=1
     """
     parametros = []
+
+    if ticket:
+        consulta += " AND numero ILIKE %s"
+        parametros.append(f"%{ticket}%")
 
     if productor:
         consulta += " AND productor ILIKE %s"
         parametros.append(f"%{productor}%")
 
     if finca:
-        consulta += " AND finca ILIKE %s"
-        parametros.append(f"%{finca}%")
+        consulta += " AND (finca ILIKE %s OR finca_ticket ILIKE %s)"
+        parametros.extend([f"%{finca}%", f"%{finca}%"])
 
     if fecha:
         consulta += " AND (fecha_ticket = %s OR fecha_registro ILIKE %s)"
@@ -386,7 +391,24 @@ def registros():
     cursor.close()
     conexion.close()
 
-    return render_template("registros.html", datos=datos)
+    total_quintales = 0.0
+    for fila in datos:
+        valor_qq = fila[8] if len(fila) > 8 else None
+        if valor_qq not in (None, ""):
+            try:
+                total_quintales += float(valor_qq)
+            except (ValueError, TypeError):
+                pass
+
+    return render_template(
+        "registros.html",
+        datos=datos,
+        total_quintales=round(total_quintales, 2),
+        ticket=ticket,
+        productor=productor,
+        finca=finca,
+        fecha=fecha
+    )
 
 
 @app.route("/exportar_excel")
