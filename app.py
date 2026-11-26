@@ -137,6 +137,7 @@ def inicio():
             numero_comercial = request.form.get("numero_comercial", "")
             finca = request.form.get("finca", "")
             tipo_cafe = request.form.get("tipo_cafe", "")
+            tipo_movimiento = request.form.get("tipo_movimiento", "")
             pesado_inicial = a_float(request.form.get("pesado_inicial"))
             pesado_final = a_float(request.form.get("pesado_final"))
             quintales_bascula = a_float(request.form.get("quintales_bascula"))
@@ -149,52 +150,58 @@ def inicio():
             if "imagen" in request.files:
                 archivo = request.files["imagen"]
                 if archivo and archivo.filename != "" and supabase:
-                    nombre_limpio = secure_filename(archivo.filename)
-                    nombre_imagen = f"{uuid.uuid4().hex[:8]}_{nombre_limpio}"
-                    contenido = archivo.read()
-                    content_type = archivo.content_type or "image/jpeg"
+                    try:
+                        nombre_limpio = secure_filename(archivo.filename)
+                        nombre_imagen = f"{uuid.uuid4().hex[:8]}_{nombre_limpio}"
+                        contenido = archivo.read()
+                        content_type = archivo.content_type or "image/jpeg"
 
-                    supabase.storage.from_(BUCKET_NAME).upload(
-                        path=nombre_imagen,
-                        file=contenido,
-                        file_options={"content-type": content_type}
-                    )
+                        supabase.storage.from_(BUCKET_NAME).upload(
+                            path=nombre_imagen,
+                            file=contenido,
+                            file_options={"content-type": content_type}
+                        )
+                    except Exception as img_err:
+                        print(f"⚠️ No se pudo subir la imagen a Storage: {img_err}")
+                        nombre_imagen = ""
 
             conexion = get_db_connection()
             cursor = conexion.cursor()
 
             cursor.execute("""
-            INSERT INTO registros (
-                numero,
-                productor,
-                numero_comercial,
-                finca,
-                finca_ticket,
-                tipo_cafe,
-                pesado_inicial,
-                pesado_final,
-                quintales_bascula,
-                imagen,
-                fecha_registro,
-                fecha_ticket,
-                creado_por
-            )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, (
-                numero,
-                productor,
-                numero_comercial,
-                finca,
-                finca_ticket,
-                tipo_cafe,
-                pesado_inicial,
-                pesado_final,
-                quintales_bascula,
-                nombre_imagen,
-                fecha_registro,
-                fecha_ticket,
-                usuario_actual
-            ))
+INSERT INTO registros (
+    numero,
+    productor,
+    numero_comercial,
+    finca,
+    finca_ticket,
+    tipo_cafe,
+    tipo_movimiento,
+    pesado_inicial,
+    pesado_final,
+    quintales_bascula,
+    imagen,
+    fecha_registro,
+    fecha_ticket,
+    creado_por
+)
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+""", (
+    numero,
+    productor,
+    numero_comercial,
+    finca,
+    finca_ticket,
+    tipo_cafe,
+    tipo_movimiento,
+    pesado_inicial,
+    pesado_final,
+    quintales_bascula,
+    nombre_imagen,
+    fecha_registro,
+    fecha_ticket,
+    usuario_actual
+))
 
             conexion.commit()
             cursor.close()
@@ -203,7 +210,7 @@ def inicio():
             return redirect(url_for("inicio", guardado=1))
 
         except Exception as e:
-            return f"<h3>Error exacto al guardar:</h3><pre>{e}</pre><p><b>SUPABASE_URL actual:</b> '{SUPABASE_URL}'</p>"
+            return f"<h3>Error exacto al guardar:</h3><pre>{e}</pre>"
 
     conexion = get_db_connection()
     cursor = conexion.cursor()
