@@ -260,6 +260,8 @@ def editar(id):
         usuario_actual = session.get("usuario", "Desconocido")
         fecha_mod = datetime.now().strftime("%d/%m/%Y %H:%M")
         finca_ticket = request.form.get("finca_ticket", "")
+        tipo_movimiento = request.form.get("tipo_movimiento", "")
+        estado_pago = request.form.get("estado_pago", "No pagado")
 
         cursor.execute("""
         UPDATE registros
@@ -270,6 +272,8 @@ def editar(id):
             finca=%s,
             finca_ticket=%s,
             tipo_cafe=%s,
+            tipo_movimiento=%s,
+            estado_pago=%s,
             pesado_inicial=%s,
             pesado_final=%s,
             quintales_bascula=%s,
@@ -284,6 +288,8 @@ def editar(id):
             request.form["finca"],
             finca_ticket,
             request.form["tipo_cafe"],
+            tipo_movimiento,
+            estado_pago,
             a_float(request.form["pesado_inicial"]),
             a_float(request.form["pesado_final"]),
             a_float(request.form["quintales_bascula"]),
@@ -303,7 +309,7 @@ def editar(id):
         SELECT id, numero, productor, numero_comercial, finca, tipo_cafe,
                pesado_inicial, pesado_final, quintales_bascula, imagen,
                fecha_registro, fecha_ticket, creado_por, modificado_por,
-               fecha_modificacion, finca_ticket
+               fecha_modificacion, finca_ticket, tipo_movimiento, estado_pago
         FROM registros WHERE id=%s
     """, (id,))
     registro = cursor.fetchone()

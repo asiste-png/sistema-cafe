@@ -69,6 +69,28 @@
                         <input type="text" class="form-control" name="tipo_cafe" value="{{ registro[5] or '' }}">
                     </div>
 
+                <div class="row g-3 mt-1 mb-3">
+    <div class="col-md-6">
+        <label class="form-label fw-bold">🔄 Tipo de Movimiento</label>
+        {% set mov_actual = registro[16] if registro|length > 16 else '' %}
+        <select name="tipo_movimiento" class="form-select">
+            <option value="">-- Seleccionar --</option>
+            <option value="Compra" {% if mov_actual == 'Compra' %}selected{% endif %}>Compra</option>
+            <option value="Cosecha" {% if mov_actual == 'Cosecha' %}selected{% endif %}>Cosecha</option>
+            <option value="Traslado" {% if mov_actual == 'Traslado' %}selected{% endif %}>Traslado</option>
+        </select>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label fw-bold">💵 Estado de Pago</label>
+        {% set pago_actual = registro[17] if registro|length > 17 else 'No pagado' %}
+        <select name="estado_pago" class="form-select">
+            <option value="No pagado" {% if pago_actual != 'Pagado' %}selected{% endif %}>No pagado</option>
+            <option value="Pagado" {% if pago_actual == 'Pagado' %}selected{% endif %}>Pagado</option>
+        </select>
+    </div>
+</div>
+
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Quintales Báscula</label>
                         <input type="number" step="0.01" class="form-control" name="quintales_bascula" value="{{ registro[8] or '' }}">
