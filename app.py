@@ -364,54 +364,76 @@ def registros():
     finca = request.args.get("finca", "").strip()
     fecha = request.args.get("fecha", "").strip()
 
+    try:
+        pagina = max(1, int(request.args.get("pagina", 1)))
+    except ValueError:
+        pagina = 1
+
+    por_pagina = 20
+    offset = (pagina - 1) * por_pagina
+
     conexion = get_db_connection()
     cursor = conexion.cursor()
 
-    consulta = """
+    where_sql = " WHERE 1=1"
+    parametros = []
+
+    if ticket:
+        where_sql += " AND numero ILIKE %s"
+        parametros.append(f"%{ticket}%")
+
+    if productor:
+        where_sql += " AND productor ILIKE %s"
+        parametros.append(f"%{productor}%")
+
+    if finca:
+        where_sql += " AND (finca ILIKE %s OR finca_ticket ILIKE %s)"
+        parametros.extend([f"%{finca}%", f"%{finca}%"])
+
+    if fecha:
+        where_sql += " AND (fecha_ticket = %s OR fecha_registro ILIKE %s)"
+        parametros.extend([fecha, f"%{fecha}%"])
+
+    cursor.execute(
+        f"SELECT COUNT(*), COALESCE(SUM(quintales_bascula), 0) FROM registros {where_sql}",
+        parametros
+    )
+    resumen = cursor.fetchone()
+    total_registros = resumen[0] or 0
+    total_quintales = round(float(resumen[1] or 0), 2)
+    total_paginas = max(1, (total_registros + por_pagina - 1) // por_pagina)
+
+    if pagina > total_paginas:
+        pagina = total_paginas
+        offset = (pagina - 1) * por_pagina
+
+    consulta = f"""
         SELECT id, numero, productor, numero_comercial, finca, tipo_cafe,
                pesado_inicial, pesado_final, quintales_bascula, imagen,
                fecha_registro, fecha_ticket, creado_por, modificado_por,
                fecha_modificacion, finca_ticket, tipo_movimiento, estado_pago
-        FROM registros WHERE 1=1
+        FROM registros
+        {where_sql}
+        ORDER BY
+            NULLIF(regexp_replace(COALESCE(numero, ''), '[^0-9]', '', 'g'), '')::bigint DESC NULLS LAST,
+            numero DESC,
+            id DESC
+        LIMIT %s OFFSET %s
     """
-    parametros = []
 
-    if ticket:
-        consulta += " AND numero ILIKE %s"
-        parametros.append(f"%{ticket}%")
-
-    if productor:
-        consulta += " AND productor ILIKE %s"
-        parametros.append(f"%{productor}%")
-
-    if finca:
-        consulta += " AND (finca ILIKE %s OR finca_ticket ILIKE %s)"
-        parametros.extend([f"%{finca}%", f"%{finca}%"])
-
-    if fecha:
-        consulta += " AND (fecha_ticket = %s OR fecha_registro ILIKE %s)"
-        parametros.extend([fecha, f"%{fecha}%"])
-
-    consulta += " ORDER BY id DESC"
-
-    cursor.execute(consulta, parametros)
+    cursor.execute(consulta, parametros + [por_pagina, offset])
     datos = cursor.fetchall()
     cursor.close()
     conexion.close()
 
-    total_quintales = 0.0
-    for fila in datos:
-        valor_qq = fila[8] if len(fila) > 8 else None
-        if valor_qq not in (None, ""):
-            try:
-                total_quintales += float(valor_qq)
-            except (ValueError, TypeError):
-                pass
-
     return render_template(
         "registros.html",
         datos=datos,
-        total_quintales=round(total_quintales, 2),
+        total_quintales=total_quintales,
+        total_registros=total_registros,
+        pagina=pagina,
+        total_paginas=total_paginas,
+        offset=offset,
         ticket=ticket,
         productor=productor,
         finca=finca,

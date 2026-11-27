@@ -65,12 +65,12 @@
 
     <!-- Resumen de Suma de Quintales -->
     <div class="alert alert-success d-flex justify-content-between align-items-center shadow-sm mb-3">
-        <span class="fw-bold">📋 Registros mostrados: {{ datos|length }}</span>
+        <span class="fw-bold">📋 Registros mostrados: {{ datos|length }}{% if total_registros is defined %} de {{ total_registros }}{% endif %}</span>
         <span class="fs-5 fw-bold">⚖️ Total Quintales: {{ "%.2f"|format(total_quintales or 0) }} qq</span>
     </div>
 
     <!-- Tabla de Registros -->
-    <div class="card shadow-sm mb-5">
+    <div class="card shadow-sm mb-4">
         <div class="table-responsive">
             <table class="table table-striped table-hover table-bordered align-middle mb-0 text-nowrap">
                 <thead class="table-dark">
@@ -95,7 +95,7 @@
                 <tbody>
                     {% for registro in datos %}
                     <tr>
-                        <td>{{ loop.index }}</td>
+                        <td>{{ (offset or 0) + loop.index }}</td>
                         <td class="fw-bold">{{ registro[1] }}</td>
                         <td>
                             {% if registro[11] %}
@@ -162,6 +162,31 @@
             </table>
         </div>
     </div>
+
+    <!-- Paginación (20 por página) -->
+    {% if total_paginas is defined and total_paginas > 1 %}
+    <nav aria-label="Paginación de registros" class="mb-5">
+        <ul class="pagination justify-content-center flex-wrap">
+            <li class="page-item {% if pagina <= 1 %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('registros', pagina=pagina-1, ticket=ticket, productor=productor, finca=finca, fecha=fecha) }}">« Anterior</a>
+            </li>
+
+            {% for p in range(1, total_paginas + 1) %}
+                {% if p == 1 or p == total_paginas or (p >= pagina - 3 and p <= pagina + 3) %}
+                    <li class="page-item {% if p == pagina %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('registros', pagina=p, ticket=ticket, productor=productor, finca=finca, fecha=fecha) }}">{{ p }}</a>
+                    </li>
+                {% elif p == pagina - 4 or p == pagina + 4 %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+            {% endfor %}
+
+            <li class="page-item {% if pagina >= total_paginas %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('registros', pagina=pagina+1, ticket=ticket, productor=productor, finca=finca, fecha=fecha) }}">Siguiente »</a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
 
 </div>
 
